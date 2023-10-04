@@ -1,58 +1,59 @@
 import { createRouter, createWebHistory } from 'vue-router'
-const Home = () => import('../views/Home.vue');
-
-const Login = () => import('../views/Login.vue');
-const Register = () => import('../views/Register.vue');
-const PasswordForget = () => import('../views/PasswordForget.vue');
-const PasswordReset = () => import('../views/PasswordReset.vue');
-
-const Dashboard = () => import('../views/Dashboard.vue');
-const Products = () => import('../views/Products.vue');
-const ProductsCreate = () => import('../components/Product/CreateProduct.vue');
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
-    {
-      path: '/dashboard',
-      name: 'dashboard',
-      component: Dashboard
-    },
-    {
-      path: '/products',
-      name: 'products',
-      component: Products
-    },
-    {
-      path: '/product-create',
-      name: 'product-create',
-      component: ProductsCreate
-    },
-    {
       path: '/login',
       name: 'login',
-      component: Login
+      component: () => import('../views/auth/Login.vue')
     },
     {
       path: '/register',
       name: 'register',
-      component: Register
+      component: () => import('../views/auth/Register.vue')
     },
     {
-      path: '/password-forget',
-      name: 'password-forget',
-      component: PasswordForget
+      path: '/forget-password',
+      name: 'forget-password',
+      component: () => import('../views/auth/ForgetPassword.vue')
     },
     {
-      path: '/password-reset',
-      name: 'password-reset',
-      component: PasswordReset
+      path: '/reset-password',
+      name: 'reset-password',
+      component: () => import('../views/auth/ResetPassword.vue')
     },
+
+    {
+      path: '/',
+      component: () => import('../layouts/Master.vue'),
+      children:[
+        {
+          path: '',
+          name: 'dashboard',
+          component: () => import('../views/Dashboard.vue')
+        },
+        {
+          path: 'product',
+          name: 'product',
+          component: () => import('../views/product/Index.vue'),
+          children:[
+            {
+              path:'list',
+              name: 'product-list',
+              component: () => import('../views/product/List.vue')
+            }
+          ]
+        },
+        // {
+        //   path: 'product',
+        //   name: 'product-create',
+        //   component: ProductsCreate
+        // },
+      ],
+    },
+    
+    
   ]
 })
 
