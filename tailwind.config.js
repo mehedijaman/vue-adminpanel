@@ -6,7 +6,9 @@ export default {
     "./node_modules/flowbite/**/*.js"
   ],
   plugins: [
-    require('flowbite/plugin')
+    require('flowbite/plugin')({
+      charts: true,
+    }),
   ],
   darkMode: 'class',
   theme: {

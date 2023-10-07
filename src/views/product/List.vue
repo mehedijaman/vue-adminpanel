@@ -11,7 +11,7 @@
         { text: "Discount", value: "discountPercentage", sortable: true},
         { text: "Rating", value: "rating", sortable: true},
         { text: "Quantity", value: "stock", sortable: true},
-        { text: "Operation", value: "operation" },
+        { text: "Action", value: "operations" },
     ];
 
     const items = ref([]);
@@ -59,14 +59,15 @@
     </nav>
     <br>
     <Vue3EasyDataTable
-      show-index
-      alternating
-      border-cell
-      buttons-pagination
-      :loading="loading"
-      :headers="headers"
-      :items="items"
-      v-model:items-selected="itemsSelected"
+        rows-per-page="10"
+        show-index
+        alternating
+        border-cell
+        buttons-pagination
+        :loading="loading"
+        :headers="headers"
+        :items="items"
+        v-model:items-selected="itemsSelected"
     >
         <template #expand="item">
             <div style="padding: 14px;">
@@ -79,12 +80,12 @@
             style="width: 100px; height: 80px;"
             />
         </template>
-        <template #item-operation="item">
-      <div class="operation-wrapper">
-        <router-link :to="`/product/${item.id}/details`">Details</router-link> | 
-        <button type="button" @click="editItem(item)">Edit</button> | 
-        <button type="button" @click="deleteItem(item)">Delete</button>
-      </div>
-    </template>
+        <template #item-operations="items">
+            <RouterLink  :to="{ name: 'product-details', params: { id: items.id } }" title="Details">
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                </svg>
+            </RouterLink>
+        </template>
     </Vue3EasyDataTable>
 </template>
