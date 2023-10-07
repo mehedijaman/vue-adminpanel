@@ -1,34 +1,90 @@
-<script>
-import { createApp, ref } from 'vue';
+<script setup>
+    import 'vue3-easy-data-table/dist/style.css';
+    import Vue3EasyDataTable from 'vue3-easy-data-table';
+    import {onMounted, ref} from "vue";
+    import { RouterLink } from 'vue-router';
 
-const App = {
-components: { EasyDataTable: window["vue3-easy-data-table"] },
-setup() {
-    const headers = ref([
-    { text: "PLAYER", value: "player" },
-    { text: "TEAM", value: "team"},
-    { text: "NUMBER", value: "number"},
-    { text: "POSITION", value: "position"},
-    { text: "HEIGHT", value: "indicator.height"},
-    { text: "WEIGHT (lbs)", value: "indicator.weight", sortable: true},
-    { text: "LAST ATTENDED", value: "lastAttended", width: 200},
-    { text: "COUNTRY", value: "country"},
-    ]);
-    const items = ref([
-    { player: "Stephen Curry", team: "GSW", number: 30, position: 'G', indicator: {"height": '6-2', "weight": 185}, lastAttended: "Davidson", country: "USA"},
-    { player: "Lebron James", team: "LAL", number: 6, position: 'F', indicator: {"height": '6-9', "weight": 250}, lastAttended: "St. Vincent-St. Mary HS (OH)", country: "USA"},
-    { player: "Kevin Durant", team: "BKN", number: 7, position: 'F', indicator: {"height": '6-10', "weight": 240}, lastAttended: "Texas-Austin", country: "USA"},
-    { player: "Giannis Antetokounmpo", team: "MIL", number: 34, position: 'F', indicator: {"height": '6-11', "weight": 242}, lastAttended: "Filathlitikos", country: "Greece"},
-    ]);
-    return {
-    headers,
-    items,
+
+    const headers = [
+        { text: "Title", value: "title", sortable: true },
+        { text: "Price", value: "price", sortable: true},
+        { text: "Discount", value: "discountPercentage", sortable: true},
+        { text: "Rating", value: "rating", sortable: true},
+        { text: "Quantity", value: "stock", sortable: true},
+        { text: "Operation", value: "operation" },
+    ];
+
+    const items = ref([]);
+
+    const loading = ref(true)
+    onMounted(async () => {
+        const res = await fetch('https://dummyjson.com/products')
+        .then(res => {
+            loading.value = false;
+            return res.json();
+        })
+        items.value = res.products;
+    })
+
+    const itemsSelected = ref([]);
+
+    const deleteItem = (Item) => {
+      items.value = items.value.filter((item) => item.id !== Item.id);
     };
-}
-};
 
-// createApp(App).mount("#app");
+   
 </script>
+
 <template>
-<div id="app"></div>
+    <!-- Breadcrumb -->
+    <nav class="flex px-5 py-3 text-gray-700 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+            <li class="inline-flex items-center">
+                <router-link to="/" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white">
+                    <svg class="w-3 h-3 mr-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
+                    </svg>
+                    Home
+                </router-link>
+            </li>
+            <li aria-current="page">
+                <div class="flex items-center">
+                    <svg class="w-3 h-3 mx-1 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                    </svg>
+                    <span class="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">Product</span>
+                </div>
+            </li>
+        </ol>
+    </nav>
+    <br>
+    <Vue3EasyDataTable
+      show-index
+      alternating
+      border-cell
+      buttons-pagination
+      :loading="loading"
+      :headers="headers"
+      :items="items"
+      v-model:items-selected="itemsSelected"
+    >
+        <template #expand="item">
+            <div style="padding: 14px;">
+               <strong>Description:</strong> {{ item.description }}
+            </div>
+        </template>
+        <template #loading>
+            <img
+            src="https://i.pinimg.com/originals/94/fd/2b/94fd2bf50097ade743220761f41693d5.gif"
+            style="width: 100px; height: 80px;"
+            />
+        </template>
+        <template #item-operation="item">
+      <div class="operation-wrapper">
+        <router-link :to="`/product/${item.id}/details`">Details</router-link> | 
+        <button type="button" @click="editItem(item)">Edit</button> | 
+        <button type="button" @click="deleteItem(item)">Delete</button>
+      </div>
+    </template>
+    </Vue3EasyDataTable>
 </template>
