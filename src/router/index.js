@@ -1,4 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import {ref, reactive } from 'vue';
+import { createRouter, createWebHistory } from 'vue-router';
+import authStore from '../stores/authStore';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,6 +29,9 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('../layouts/Master.vue'),
+      meta:{
+        requiresAuth: true,
+      },
       children:[
         {
           path: '',
@@ -58,11 +63,29 @@ const router = createRouter({
             }
           ]
         },
+        {
+          path: 'profile',
+          name: 'profile',
+          component: () => import('../views/auth/Profile.vue')
+        },
       ],
     },
     
     
   ]
-})
+});
+
+router.beforeEach((to, from, next) => {
+  const auth = authStore();
+
+  auth.isAuthenticated = localStorage.getItem('isAuthenticated');
+
+  if(to.meta.requiresAuth && auth.isAuthenticated != 'true'){
+    next('/login');
+  }else{
+    auth.authenticatedUser = JSON.parse(localStorage.getItem('authenticatedUser'));
+    next();
+  }
+});
 
 export default router
