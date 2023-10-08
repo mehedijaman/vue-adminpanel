@@ -60,12 +60,92 @@ const router = createRouter({
               path:':id/edit',
               name: 'product-edit',
               component: () => import('../views/product/Edit.vue')
-            }
+            },
+            {
+              path: 'category',
+              children:[
+                {
+                  path:'',
+                  name: 'product-category',
+                  component: () => import('../views/product/List.vue')
+                },
+                {
+                  path:'create',
+                  name: 'product-category-create',
+                  component: () => import('../views/product/Create.vue')
+                },
+                {
+                  path:':id/details',
+                  name: 'product-category-details',
+                  component: () => import('../views/product/Details.vue')
+                },
+                {
+                  path:':id/edit',
+                  name: 'product-category-edit',
+                  component: () => import('../views/product/Edit.vue')
+                }
+              ]
+            },
+            {
+              path: 'brand',
+              children:[
+                {
+                  path:'',
+                  name: 'brand',
+                  component: () => import('../views/product/List.vue')
+                },
+                {
+                  path:'create',
+                  name: 'product-brand-create',
+                  component: () => import('../views/product/Create.vue')
+                },
+                {
+                  path:':id/details',
+                  name: 'product-brand-details',
+                  component: () => import('../views/product/Details.vue')
+                },
+                {
+                  path:':id/edit',
+                  name: 'product-brand-edit',
+                  component: () => import('../views/product/Edit.vue')
+                }
+              ]
+            },
           ]
         },
         {
           path: 'profile',
           name: 'profile',
+          component: () => import('../views/auth/Profile.vue')
+        },
+        {
+          path: 'user',
+          name: 'user',
+          component: () => import('../views/auth/Profile.vue')
+        },
+        {
+          path: 'report',
+          name: 'report',
+          component: () => import('../views/auth/Profile.vue')
+        },
+        {
+          path: 'settings',
+          name: 'settings',
+          component: () => import('../views/auth/Profile.vue')
+        },
+        {
+          path: 'vendor',
+          name: 'vendor',
+          component: () => import('../views/auth/Profile.vue')
+        },
+        {
+          path: 'customer',
+          name: 'customer',
+          component: () => import('../views/auth/Profile.vue')
+        },
+        {
+          path: 'invoice',
+          name: 'invoice',
           component: () => import('../views/auth/Profile.vue')
         },
       ],

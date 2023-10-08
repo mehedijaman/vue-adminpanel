@@ -4,7 +4,6 @@
     import {onMounted, ref} from "vue";
     import { RouterLink } from 'vue-router';
 
-
     const headers = [
         { text: "Title", value: "title", sortable: true },
         { text: "Price", value: "price", sortable: true},
@@ -15,8 +14,10 @@
     ];
 
     const items = ref([]);
-
     const loading = ref(true)
+    const itemsSelected = ref([]);
+    const rowsPerPage = ref(10);
+
     onMounted(async () => {
         const res = await fetch('https://dummyjson.com/products')
         .then(res => {
@@ -26,7 +27,6 @@
         items.value = res.products;
     })
 
-    const itemsSelected = ref([]);
 
     const deleteItem = (Item) => {
       items.value = items.value.filter((item) => item.id !== Item.id);
@@ -59,7 +59,7 @@
     </nav>
     <br>
     <Vue3EasyDataTable
-        rows-per-page="10"
+        :rows-per-page=rowsPerPage
         show-index
         alternating
         border-cell
