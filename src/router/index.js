@@ -126,7 +126,13 @@ const router = createRouter({
         {
           path: 'report',
           name: 'report',
-          component: () => import('../views/auth/Profile.vue')
+          children:[
+            {
+              path: 'monthly-sales',
+              name: 'monthly-sales',
+              component: () => import('../views/report/MonthlySales.vue')
+            }
+          ]
         },
         {
           path: 'settings',
