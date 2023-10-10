@@ -1,163 +1,145 @@
 <script setup>
-import { Bar} from 'vue-chartjs'
-import { 
-    Chart as ChartJS, 
-    Title, 
-    Tooltip, 
-    Legend, 
-    BarElement, 
-    ArcElement, 
-    CategoryScale, 
-    LinearScale,
-    PointElement,
-    LineElement,
-} from 'chart.js';
+import {ref, reactive, computed, watch } from 'vue';
 
-ChartJS.register(
-    Title, 
-    Tooltip, 
-    Legend, 
-    BarElement, 
-    ArcElement ,
-    CategoryScale, 
-    LinearScale,
-    PointElement,
-    LineElement,
-);
+const data = reactive([
+    {
+        month: 'January',
+        sales: 500,
+        status:true
+    },
+    {
+        month: 'February',
+        sales: 600,
+        status:true
+    },
+    {
+        month: 'March',
+        sales: 700,
+        status:true
+    },
+    {
+        month: 'April',
+        sales: 800,
+        status:true
+    },
+    {
+        month: 'May',
+        sales: 900,
+        status:true
+    },
+    {
+        month: 'June',
+        sales: 1000,
+        status:true
+    },
+    {
+        month: 'July',
+        sales: 950,
+        status:true
+    },
+    {
+        month: 'August',
+        sales: 800,
+        status:true
+    },
+    {
+        month: 'September',
+        sales: 500,
+        status:true
+    },
+    {
+        month: 'October',
+        sales: 600,
+        status:true
+    },
+    {
+        month: 'November',
+        sales: 850,
+        status:true
+    },
+    {
+        month: 'December',
+        sales: 900,
+        status:true
+    },
+]);
 
-const chartOptions = {
-  responsive: true,
-  maintainAspectRatio: false
-}
+const filteredData = computed(() => {
+    return data.filter(item => item.status === true);
+});
 
-const barChartData = {
-    labels:['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ],
-    datasets: 
-    [
-        {
-            label: 'Monthly Sales',
-            backgroundColor: '#f87979',
-            data: [500, 600, 450, 500, 340, 340, 790, 890, 900, 700, 500, 650]
+const chartData = ref([]);
+
+watch(filteredData, (newVal, oldVal) =>{
+    chartData.value = newVal.map(item => ({
+        label:item.month,
+        value:item.sales
+    }));
+}, {deep: true, immediate: true});
+
+// Create a JSON object to store the chart configurations
+const chartConfigs = computed(() => {
+    return {
+        type: "column2d",
+        width: "700",
+        height: "400",
+        dataFormat: "json",
+        dataSource: {
+            chart: {
+                caption: "Monthly Sales Report for the Year [2022]",
+                subCaption: "Monthly Sales Report",
+                xAxisName: "Months",
+                yAxisName: "Sales in Taka",
+                numberSuffix: "",
+                numberPrefix: "",
+                exportEnabled:"1",
+                theme: "fusion"
+            },
+            data: chartData.value,
         }
-    ]
-};
+    };
+});
+
 </script>
+
 <template>
-    <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
-        <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-            Export to PDF
-        </span>
-        </button>
-        <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
-        <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-            Export to  Excel
-        </span>
-        </button>
-        <button class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
-        <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
-            Export to Word
-        </span>
-        </button>
     <div class="grid grid-cols-3 gap-4 mb-4">
         <div>            
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-4 py-2">
                             #
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-4 py-2">
                             Status
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-4 py-2">
                             Month
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-4 py-2">
                             Sales
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">1</th>
-                        <td class="px-6 py-4"><input type="checkbox"> </td>
-                        <td class="px-6 py-4">January</td>
-                        <td class="px-6 py-4">$2999</td>
+                    <tr v-for="(item,index) in data" :key="index" class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <th scope="row" class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ index+1 }}</th>
+                        <td class="px-4 py-2"><input v-model="item.status" type="checkbox"> </td>
+                        <td class="px-4 py-2">{{ item.month }}</td>
+                        <td class="px-4 py-2">${{ item.sales }}</td>
                     </tr>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">1</th>
-                        <td class="px-6 py-4"><input type="checkbox"> </td>
-                        <td class="px-6 py-4">January</td>
-                        <td class="px-6 py-4">$2999</td>
-                    </tr>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">1</th>
-                        <td class="px-6 py-4"><input type="checkbox"> </td>
-                        <td class="px-6 py-4">January</td>
-                        <td class="px-6 py-4">$2999</td>
-                    </tr>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">1</th>
-                        <td class="px-6 py-4"><input type="checkbox"> </td>
-                        <td class="px-6 py-4">January</td>
-                        <td class="px-6 py-4">$2999</td>
-                    </tr>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">1</th>
-                        <td class="px-6 py-4"><input type="checkbox"> </td>
-                        <td class="px-6 py-4">January</td>
-                        <td class="px-6 py-4">$2999</td>
-                    </tr>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">1</th>
-                        <td class="px-6 py-4"><input type="checkbox"> </td>
-                        <td class="px-6 py-4">January</td>
-                        <td class="px-6 py-4">$2999</td>
-                    </tr>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">1</th>
-                        <td class="px-6 py-4"><input type="checkbox"> </td>
-                        <td class="px-6 py-4">January</td>
-                        <td class="px-6 py-4">$2999</td>
-                    </tr>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">1</th>
-                        <td class="px-6 py-4"><input type="checkbox"> </td>
-                        <td class="px-6 py-4">January</td>
-                        <td class="px-6 py-4">$2999</td>
-                    </tr>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">1</th>
-                        <td class="px-6 py-4"><input type="checkbox"> </td>
-                        <td class="px-6 py-4">January</td>
-                        <td class="px-6 py-4">$2999</td>
-                    </tr>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">1</th>
-                        <td class="px-6 py-4"><input type="checkbox"> </td>
-                        <td class="px-6 py-4">January</td>
-                        <td class="px-6 py-4">$2999</td>
-                    </tr>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">1</th>
-                        <td class="px-6 py-4"><input type="checkbox"> </td>
-                        <td class="px-6 py-4">January</td>
-                        <td class="px-6 py-4">$2999</td>
-                    </tr>
-                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">1</th>
-                        <td class="px-6 py-4"><input type="checkbox"> </td>
-                        <td class="px-6 py-4">January</td>
-                        <td class="px-6 py-4">$2999</td>
-                    </tr>
-
-
                 </tbody>
             </table>
-
         </div>
         <div class="col-span-2 flex items-center justify-center h-96 mb-4 rounded bg-gray-50 dark:bg-gray-800">
-            <Bar class="w-full" :data="barChartData" :options="chartOptions" />
+            <fusioncharts
+            :type="chartConfigs.type"
+            :width="chartConfigs.width"
+            :height="chartConfigs.height"
+            :dataformat="chartConfigs.dataFormat"
+            :dataSource="chartConfigs.dataSource"
+            />
         </div>
     </div>
-</template>
+</template> 
