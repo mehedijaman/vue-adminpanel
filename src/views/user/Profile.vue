@@ -1,18 +1,13 @@
 <script setup>
     import { ref, onBeforeMount } from 'vue';
     import authStore from '../../stores/authStore';
-    // import {capitalizeWord} from '../../helper/utility';
     import { RouterLink } from 'vue-router';
 
     const auth = authStore();
-    const loading = ref(true);
 
-    onBeforeMount(async () => {
-        await auth.getProfile();
-        loading.value = false;
-    }); 
-
-  
+    onBeforeMount(() =>{
+        auth.profile = JSON.parse(localStorage.getItem("profile"));
+    });
 </script>
 <template>
 
@@ -35,8 +30,7 @@
                     <ul
                         class="bg-gray-100 text-gray-600 hover:text-gray-700 hover:shadow py-2 px-3 mt-3 divide-y rounded shadow-sm">
                         <li class="flex items-center py-3">
-                            <span>Status</span>
-                            <span class="ml-auto"><span class="bg-green-500 py-1 px-2 rounded text-white text-sm">Not Voter</span></span>
+                            <span class="bg-green-500 py-1 px-2 rounded text-white text-sm ">{{ auth.profile.age >= 18 ? 'Eligible for voting' : 'Not eligible for voting' }}</span>
                         </li>
                         <li class="flex items-center py-3">
                             <span>Age</span>

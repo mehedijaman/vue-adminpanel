@@ -20,6 +20,9 @@ const authStore = defineStore('auth', () => {
     if(JSON.parse(localStorage.getItem('authenticatedUser')))
         authenticatedUser.value = JSON.parse(localStorage.getItem('authenticatedUser'));
 
+    if(JSON.parse(localStorage.getItem('profile')))
+        Object.assign('profile',JSON.parse(localStorage.getItem('profile')));
+
     function login(formData){
         fetch('https://dummyjson.com/auth/login', {
             method: 'POST',
@@ -31,9 +34,10 @@ const authStore = defineStore('auth', () => {
             })
         })
         .then(res => res.json())
-        .then((res) => {
+        .then(async (res) => {
             isAuthenticated.value = true;
             authenticatedUser.value = res;
+            await getProfile();
 
             localStorage.setItem('isAuthenticated', isAuthenticated.value);
             localStorage.setItem('authenticatedUser', JSON.stringify(authenticatedUser.value));
@@ -45,9 +49,11 @@ const authStore = defineStore('auth', () => {
     function logout(){
         isAuthenticated.value = false;
         authenticatedUser.value = {};
+        Object.assign('profile',{});
 
         localStorage.setItem('isAuthenticated', isAuthenticated.value);
         localStorage.setItem('authenticatedUser', JSON.stringify(authenticatedUser.value));
+        localStorage.setItem('profile', JSON.stringify(profile));
 
         router.push('/login');
     }
@@ -62,6 +68,7 @@ const authStore = defineStore('auth', () => {
         })
         .then(res =>  res.json())
         .then(res => {
+            localStorage.setItem('profile', JSON.stringify(res));
             Object.assign(profile, res);
         });
     }
