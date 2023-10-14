@@ -39,8 +39,11 @@ const authStore = defineStore('auth', () => {
     }
 
     function logout(){
-        localStorage.removeItem('authenticatedUser');
-        localStorage.removeItem('isAuthenticated');
+        isAuthenticated.value = false;
+        authenticatedUser.value = {};
+
+        localStorage.setItem('isAuthenticated', isAuthenticated.value);
+        localStorage.setItem('authenticatedUser', JSON.stringify(authenticatedUser.value));
 
         router.push('/login');
     }
