@@ -116,12 +116,17 @@ const router = createRouter({
         {
           path: 'profile',
           name: 'profile',
-          component: () => import('../views/auth/Profile.vue')
+          component: () => import('../views/user/Profile.vue')
+        },
+        {
+          path: 'profile/edit',
+          name: 'profile-edit',
+          component: () => import('../views/user/ProfileEdit.vue')
         },
         {
           path: 'user',
           name: 'user',
-          component: () => import('../views/auth/Profile.vue')
+          component: () => import('../views/user/List.vue')
         },
         {
           path: 'report',
@@ -137,22 +142,22 @@ const router = createRouter({
         {
           path: 'settings',
           name: 'settings',
-          component: () => import('../views/auth/Profile.vue')
+          component: () => import('../views/Settings.vue')
         },
         {
           path: 'vendor',
           name: 'vendor',
-          component: () => import('../views/auth/Profile.vue')
+          component: () => import('../views/vendor/List.vue')
         },
         {
           path: 'customer',
           name: 'customer',
-          component: () => import('../views/auth/Profile.vue')
+          component: () => import('../views/customer/List.vue')
         },
         {
           path: 'invoice',
           name: 'invoice',
-          component: () => import('../views/auth/Profile.vue')
+          component: () => import('../views/invoice/List.vue')
         },
       ],
     },
@@ -164,12 +169,12 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const auth = authStore();
 
-  auth.isAuthenticated = localStorage.getItem('isAuthenticated');
+  auth.isAuthenticated = JSON.parse(localStorage.getItem('isAuthenticated'));
 
-  if(to.meta.requiresAuth && auth.isAuthenticated != 'true'){
+  if(to.meta.requiresAuth && auth.isAuthenticated != true){
     next('/login');
   }else{
-    auth.authenticatedUser = JSON.parse(localStorage.getItem('authenticatedUser'));
+    // auth.authenticatedUser = JSON.parse(localStorage.getItem('authenticatedUser'));
     next();
   }
 });

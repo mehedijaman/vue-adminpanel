@@ -15,6 +15,10 @@ const notify = (message) => {
 const authStore = defineStore('auth', () => {
     const isAuthenticated = ref();
     const authenticatedUser = ref({});
+    const profile = reactive({});
+
+    if(JSON.parse(localStorage.getItem('authenticatedUser')))
+        authenticatedUser.value = JSON.parse(localStorage.getItem('authenticatedUser'));
 
     function login(formData){
         fetch('https://dummyjson.com/auth/login', {
@@ -48,7 +52,21 @@ const authStore = defineStore('auth', () => {
         router.push('/login');
     }
 
-    return { isAuthenticated, authenticatedUser, login, logout };
+    async function getProfile(){
+        await fetch(`https://dummyjson.com/auth/users/${authenticatedUser.value.id}`, {
+            method: 'GET',
+            headers: {
+            'Authorization': `Bearer ${authenticatedUser.value.token}`, 
+            'Content-Type': 'application/json'
+            }, 
+        })
+        .then(res =>  res.json())
+        .then(res => {
+            Object.assign(profile, res);
+        });
+    }
+
+    return { isAuthenticated, authenticatedUser, login, logout, profile, getProfile};
 
 });
 

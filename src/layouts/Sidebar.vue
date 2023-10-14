@@ -5,7 +5,7 @@ import authStore from '../stores/authStore';
 const auth = authStore();
 </script>
 <template>
-    <aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700" aria-label="Sidebar">
+    <aside id="logo-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen pt-16 transition-transform -translate-x-full bg-white sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700 border-r-2 border-red-200" aria-label="Sidebar">
         <div class="h-full px-3 pb-4 overflow-y-auto bg-slate-200 dark:bg-gray-800">
             <ul class="space-y-2 font-medium">
                 <li>
@@ -133,7 +133,7 @@ const auth = authStore();
                             <path d="M5 19h10v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2ZM5 7a5.008 5.008 0 0 1 4-4.9 3.988 3.988 0 1 0-3.9 5.859A4.974 4.974 0 0 1 5 7Zm5 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm5-1h-.424a5.016 5.016 0 0 1-1.942 2.232A6.007 6.007 0 0 1 17 17h2a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5ZM5.424 9H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h2a6.007 6.007 0 0 1 4.366-5.768A5.016 5.016 0 0 1 5.424 9Z"/>
                         </svg>
     
-                        <span class="ml-3">Profile</span>
+                        <span class="ml-3">My Profile</span>
                     </router-link>
                 </li>
                 <li>
